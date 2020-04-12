@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BethanysPieShopHRM.Server.Components;
 using BethanysPieShopHRM.Server.Services;
 using BethanysPieShopHRM.Shared;
 using Microsoft.AspNetCore.Components;
@@ -15,14 +16,22 @@ namespace BethanysPieShopHRM.Server.Pages
 
         public IEnumerable<Employee> Employees { get; set; }
 
+        protected AddEmployeeDialogBase AddEmployeeDialog { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
-            Employees = await EmployeeDataService.GetAllEmployees();
+            Employees = (await EmployeeDataService.GetAllEmployees()).ToList();
         }
 
-        private List<Country> Countries { get; set; }
+        protected void QuickAddEmployee()
+        {
+            AddEmployeeDialog.Show();
+        }
 
-        private List<JobCategory> JobCategories { get; set; }
-
+        public async void AddEmployeeDialog_OnDialogClose()
+        {
+            Employees = (await EmployeeDataService.GetAllEmployees()).ToList();
+            StateHasChanged();
+        }
     }
 }
